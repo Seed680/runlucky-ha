@@ -1,0 +1,7 @@
+{
+  "name": "RunLucky Water Softener",
+  "render_readme": true,
+  "homeassistant": "2024.4.0",
+  "zip_release": false,
+  "filename": "runlucky.zip"
+}

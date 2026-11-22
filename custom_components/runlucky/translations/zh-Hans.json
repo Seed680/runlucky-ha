@@ -1,0 +1,274 @@
+{
+  "entity": {
+    "sensor": {
+      "flowRate": {
+        "name": "瞬时流量"
+      },
+      "residualWaterProduction": {
+        "name": "剩余产水量"
+      },
+      "remainingDay": {
+        "name": "剩余天数"
+      },
+      "pressureValue": {
+        "name": "水压"
+      },
+      "pressureSettingValue": {
+        "name": "压力设定值"
+      },
+      "washCountdownTime": {
+        "name": "周期倒计时"
+      },
+      "pauseRemainingTime": {
+        "name": "暂停剩余时间"
+      },
+      "saltDissolutionRemainingTime": {
+        "name": "溶盐剩余时间"
+      },
+      "absorbSaltTimeRemaining": {
+        "name": "吸盐剩余时间"
+      },
+      "backWashTimeRemaining": {
+        "name": "反洗剩余时间"
+      },
+      "saltTankRefillTimeRemaining": {
+        "name": "补盐箱剩余时间"
+      },
+      "dailyWaterConsumption": {
+        "name": "今日用水量"
+      },
+      "averageWeeklyWaterConsumption": {
+        "name": "近7天日均用水量"
+      },
+      "regenerationTimes": {
+        "name": "再生次数"
+      },
+      "inletTds": {
+        "name": "进水 TDS"
+      },
+      "outletTds": {
+        "name": "出水 TDS"
+      },
+      "roFilterMaterialLifespanPercentage": {
+        "name": "RO 滤芯寿命"
+      },
+      "percentageOfLifespanOfPacCarbonFiberCompositeFilterMaterial": {
+        "name": "PAC 复合滤料寿命"
+      },
+      "pacTotalWaterProductionTime": {
+        "name": "PAC 累计制水时间"
+      },
+      "roTotalWaterProductionTime": {
+        "name": "RO 累计制水时间"
+      },
+      "rawWaterHardness": {
+        "name": "原水硬度"
+      },
+      "resinVolume": {
+        "name": "树脂量"
+      },
+      "station": {
+        "name": "系统状态"
+      },
+      "f104Station": {
+        "name": "阀门状态"
+      },
+      "roStation": {
+        "name": "RO 状态"
+      },
+      "systemCloseReason": {
+        "name": "关阀原因"
+      },
+      "regenerationPattern": {
+        "name": "再生类型"
+      },
+      "workPattern": {
+        "name": "工作模式"
+      },
+      "deviceModel": {
+        "name": "设备型号"
+      },
+      "waterImmersionDetector1": {
+        "name": "漏水检测 1"
+      },
+      "waterImmersionDetector2": {
+        "name": "漏水检测 2"
+      },
+      "waterImmersionDetector3": {
+        "name": "漏水检测 3"
+      },
+      "waterImmersionDetector4": {
+        "name": "漏水检测 4"
+      }
+    },
+    "binary_sensor": {
+      "saltShortageReminder": {
+        "name": "缺盐提醒"
+      },
+      "saltShortageAlarm": {
+        "name": "缺盐报警"
+      },
+      "resinReplacementReminder": {
+        "name": "需更换树脂"
+      },
+      "filterMaterialReminder": {
+        "name": "需更换滤料"
+      },
+      "waterLeakage": {
+        "name": "漏水"
+      },
+      "clockChipFault": {
+        "name": "时钟芯片故障"
+      },
+      "memoryErrorFault": {
+        "name": "存储故障"
+      },
+      "multiplePositionSignalFault": {
+        "name": "多工位信号故障"
+      },
+      "noPositionSignalFault": {
+        "name": "无工位信号故障"
+      },
+      "isIntelligentInspection": {
+        "name": "智能巡检"
+      },
+      "vacationPattern": {
+        "name": "度假模式状态"
+      }
+    },
+    "button": {
+      "forced_regeneration": {
+        "name": "立即再生"
+      },
+      "ro_forced_regeneration": {
+        "name": "RO 强制冲洗"
+      },
+      "enter_vacation": {
+        "name": "进入度假模式"
+      },
+      "exit_vacation": {
+        "name": "退出度假模式"
+      },
+      "sync_clock": {
+        "name": "同步设备时钟"
+      },
+      "query_device": {
+        "name": "从设备读取数据"
+      }
+    },
+    "switch": {
+      "vacation_mode": {
+        "name": "度假模式"
+      }
+    },
+    "number": {
+      "rawWaterHardness": {
+        "name": "原水硬度"
+      },
+      "saltAddition": {
+        "name": "加盐量"
+      },
+      "periodicWaterProduction": {
+        "name": "周期产水量"
+      },
+      "continuousWaterTime": {
+        "name": "连续用水时间"
+      },
+      "flowRateOff": {
+        "name": "流量关阀阈值"
+      },
+      "backWashIntervalNumber": {
+        "name": "反洗间隔次数"
+      },
+      "filterMaterialWorkingDay": {
+        "name": "滤料工作天数"
+      },
+      "maximumRegenerationIntervalDay": {
+        "name": "最大再生间隔天数"
+      },
+      "operationDay": {
+        "name": "运行天数"
+      },
+      "regenerationAlarmNumber": {
+        "name": "再生报警次数"
+      },
+      "resinVolume": {
+        "name": "树脂量"
+      },
+      "washingIncreaseNumber": {
+        "name": "冲洗次数增加"
+      }
+    },
+    "select": {
+      "absorbSaltMode": {
+        "name": "吸盐方式"
+      },
+      "deviceTimeScheme": {
+        "name": "时钟制式"
+      },
+      "language": {
+        "name": "设备语言"
+      },
+      "outRelayMode": {
+        "name": "输出继电器模式"
+      },
+      "waterVolumeUnit": {
+        "name": "水量单位"
+      },
+      "workPattern": {
+        "name": "工作模式"
+      }
+    },
+    "text": {
+      "washInitiationTime": {
+        "name": "再生启动时间"
+      },
+      "absorbSaltSlowWashTime": {
+        "name": "吸盐慢洗时间"
+      },
+      "backWashTime": {
+        "name": "反洗时间"
+      },
+      "saltTankRefillTime": {
+        "name": "盐箱补水时间"
+      },
+      "washTime": {
+        "name": "正洗时间"
+      },
+      "regeneratingTriggerTime": {
+        "name": "再生触发时间"
+      }
+    }
+  },
+  "config": {
+    "step": {
+      "user": {
+        "title": "润莱账号",
+        "description": "请使用「润莱智联」App 的账号登录。厂商服务器仅提供 HTTP 明文接口，密码将以明文传输。",
+        "data": {
+          "username": "邮箱或手机号",
+          "password": "密码"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "账号或密码错误。",
+      "cannot_connect": "无法连接润莱云服务。",
+      "no_devices": "该账号下没有绑定软水机。",
+      "unknown": "未知错误，请查看日志。"
+    },
+    "abort": {
+      "already_configured": "该账号已配置。"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "润莱选项",
+        "data": {
+          "scan_interval": "轮询间隔"
+        }
+      }
+    }
+  }
+}

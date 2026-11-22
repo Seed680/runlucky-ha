@@ -1,0 +1,274 @@
+{
+  "entity": {
+    "sensor": {
+      "flowRate": {
+        "name": "Flow rate"
+      },
+      "residualWaterProduction": {
+        "name": "Residual water production"
+      },
+      "remainingDay": {
+        "name": "Remaining days"
+      },
+      "pressureValue": {
+        "name": "Water pressure"
+      },
+      "pressureSettingValue": {
+        "name": "Pressure setpoint"
+      },
+      "washCountdownTime": {
+        "name": "Cycle countdown"
+      },
+      "pauseRemainingTime": {
+        "name": "Pause remaining"
+      },
+      "saltDissolutionRemainingTime": {
+        "name": "Brine dissolution remaining"
+      },
+      "absorbSaltTimeRemaining": {
+        "name": "Brine draw remaining"
+      },
+      "backWashTimeRemaining": {
+        "name": "Backwash remaining"
+      },
+      "saltTankRefillTimeRemaining": {
+        "name": "Brine tank refill remaining"
+      },
+      "dailyWaterConsumption": {
+        "name": "Water used today"
+      },
+      "averageWeeklyWaterConsumption": {
+        "name": "Average daily use (7 days)"
+      },
+      "regenerationTimes": {
+        "name": "Regenerations"
+      },
+      "inletTds": {
+        "name": "Inlet TDS"
+      },
+      "outletTds": {
+        "name": "Outlet TDS"
+      },
+      "roFilterMaterialLifespanPercentage": {
+        "name": "RO filter lifespan"
+      },
+      "percentageOfLifespanOfPacCarbonFiberCompositeFilterMaterial": {
+        "name": "PAC filter lifespan"
+      },
+      "pacTotalWaterProductionTime": {
+        "name": "PAC total production time"
+      },
+      "roTotalWaterProductionTime": {
+        "name": "RO total production time"
+      },
+      "rawWaterHardness": {
+        "name": "Raw water hardness"
+      },
+      "resinVolume": {
+        "name": "Resin volume"
+      },
+      "station": {
+        "name": "System status"
+      },
+      "f104Station": {
+        "name": "Valve state"
+      },
+      "roStation": {
+        "name": "RO status"
+      },
+      "systemCloseReason": {
+        "name": "Valve close reason"
+      },
+      "regenerationPattern": {
+        "name": "Regeneration pattern"
+      },
+      "workPattern": {
+        "name": "Work pattern"
+      },
+      "deviceModel": {
+        "name": "Device model"
+      },
+      "waterImmersionDetector1": {
+        "name": "Leak sensor 1"
+      },
+      "waterImmersionDetector2": {
+        "name": "Leak sensor 2"
+      },
+      "waterImmersionDetector3": {
+        "name": "Leak sensor 3"
+      },
+      "waterImmersionDetector4": {
+        "name": "Leak sensor 4"
+      }
+    },
+    "binary_sensor": {
+      "saltShortageReminder": {
+        "name": "Salt shortage"
+      },
+      "saltShortageAlarm": {
+        "name": "Salt shortage alarm"
+      },
+      "resinReplacementReminder": {
+        "name": "Resin replacement required"
+      },
+      "filterMaterialReminder": {
+        "name": "Filter material replacement required"
+      },
+      "waterLeakage": {
+        "name": "Water leakage"
+      },
+      "clockChipFault": {
+        "name": "Clock chip fault"
+      },
+      "memoryErrorFault": {
+        "name": "Memory error"
+      },
+      "multiplePositionSignalFault": {
+        "name": "Multiple position signal fault"
+      },
+      "noPositionSignalFault": {
+        "name": "No position signal fault"
+      },
+      "isIntelligentInspection": {
+        "name": "Intelligent inspection"
+      },
+      "vacationPattern": {
+        "name": "Vacation mode"
+      }
+    },
+    "button": {
+      "forced_regeneration": {
+        "name": "Start regeneration"
+      },
+      "ro_forced_regeneration": {
+        "name": "Start RO flush"
+      },
+      "enter_vacation": {
+        "name": "Enter vacation mode"
+      },
+      "exit_vacation": {
+        "name": "Exit vacation mode"
+      },
+      "sync_clock": {
+        "name": "Sync device clock"
+      },
+      "query_device": {
+        "name": "Read from device"
+      }
+    },
+    "switch": {
+      "vacation_mode": {
+        "name": "Vacation mode"
+      }
+    },
+    "number": {
+      "rawWaterHardness": {
+        "name": "Raw water hardness"
+      },
+      "saltAddition": {
+        "name": "Salt addition"
+      },
+      "periodicWaterProduction": {
+        "name": "Capacity per cycle"
+      },
+      "continuousWaterTime": {
+        "name": "Continuous water time"
+      },
+      "flowRateOff": {
+        "name": "Flow shut-off threshold"
+      },
+      "backWashIntervalNumber": {
+        "name": "Backwash interval"
+      },
+      "filterMaterialWorkingDay": {
+        "name": "Filter material working days"
+      },
+      "maximumRegenerationIntervalDay": {
+        "name": "Max regeneration interval"
+      },
+      "operationDay": {
+        "name": "Operation days"
+      },
+      "regenerationAlarmNumber": {
+        "name": "Regeneration alarm count"
+      },
+      "resinVolume": {
+        "name": "Resin volume"
+      },
+      "washingIncreaseNumber": {
+        "name": "Wash frequency increase"
+      }
+    },
+    "select": {
+      "absorbSaltMode": {
+        "name": "Brine draw mode"
+      },
+      "deviceTimeScheme": {
+        "name": "Clock format"
+      },
+      "language": {
+        "name": "Device language"
+      },
+      "outRelayMode": {
+        "name": "Output relay mode"
+      },
+      "waterVolumeUnit": {
+        "name": "Water volume unit"
+      },
+      "workPattern": {
+        "name": "Work pattern"
+      }
+    },
+    "text": {
+      "washInitiationTime": {
+        "name": "Regeneration start time"
+      },
+      "absorbSaltSlowWashTime": {
+        "name": "Brine draw + slow rinse time"
+      },
+      "backWashTime": {
+        "name": "Backwash time"
+      },
+      "saltTankRefillTime": {
+        "name": "Brine tank refill time"
+      },
+      "washTime": {
+        "name": "Fast rinse time"
+      },
+      "regeneratingTriggerTime": {
+        "name": "Regeneration trigger time"
+      }
+    }
+  },
+  "config": {
+    "step": {
+      "user": {
+        "title": "RunLucky account",
+        "description": "Sign in with the account you use in the 润莱智联 (RunLucky) app. The vendor cloud only speaks plain HTTP, so your password leaves this device unencrypted.",
+        "data": {
+          "username": "Email or phone",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong email/phone or password.",
+      "cannot_connect": "Could not reach the RunLucky cloud.",
+      "no_devices": "No water softener is bound to this account.",
+      "unknown": "Unexpected error, check the logs."
+    },
+    "abort": {
+      "already_configured": "This account is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "RunLucky options",
+        "data": {
+          "scan_interval": "Polling interval"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "domain": "runlucky",
+  "name": "RunLucky Water Softener",
+  "codeowners": [
+    "@runlucky-ha"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/runlucky-ha/runlucky-ha",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/runlucky-ha/runlucky-ha/issues",
+  "loggers": [
+    "custom_components.runlucky"
+  ],
+  "requirements": [],
+  "version": "0.2.0"
+}
