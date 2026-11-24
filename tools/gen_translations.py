@@ -137,7 +137,16 @@ CONFIG = {
         "step": {
             "init": {
                 "title": "RunLucky options",
-                "data": {"scan_interval": "Polling interval"},
+                "data": {
+                    "scan_interval": "Polling interval",
+                    "show_all_entities": "Show unused / unsupported entities",
+                },
+                "data_description": {
+                    "scan_interval": "How often the cloud cache is polled.",
+                    "show_all_entities": "Also create RO, PAC, TDS, pressure and "
+                    "uninstalled leak-sensor entities that this device model "
+                    "reports but cannot use.",
+                },
             }
         }
     },
@@ -163,7 +172,18 @@ CONFIG_ZH = {
     },
     "options": {
         "step": {
-            "init": {"title": "润莱选项", "data": {"scan_interval": "轮询间隔"}}
+            "init": {
+                "title": "润莱选项",
+                "data": {
+                    "scan_interval": "轮询间隔",
+                    "show_all_entities": "显示本机用不到 / 未安装的实体",
+                },
+                "data_description": {
+                    "scan_interval": "云端缓存数据的拉取间隔。",
+                    "show_all_entities": "同时创建该型号用不到的 RO、PAC、TDS、"
+                    "压力以及未安装的水浸传感器实体。",
+                },
+            }
         }
     },
 }

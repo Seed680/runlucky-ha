@@ -25,7 +25,10 @@ from custom_components.runlucky.binary_sensor import (  # noqa: E402
     RunLuckyBinarySensor,
 )
 from custom_components.runlucky.button import BUTTONS, RunLuckyButton  # noqa: E402
-from custom_components.runlucky.coordinator import RunLuckyDevice  # noqa: E402
+from custom_components.runlucky.coordinator import (
+    RunLuckyCoordinator,
+    RunLuckyDevice,
+)  # noqa: E402
 from custom_components.runlucky.number import RunLuckyNumber  # noqa: E402
 from custom_components.runlucky.select import RunLuckySelect  # noqa: E402
 from custom_components.runlucky.sensor import (  # noqa: E402
@@ -39,8 +42,9 @@ from custom_components.runlucky.text import RunLuckyTimeText  # noqa: E402
 class Stub:
     """Stand-in for RunLuckyCoordinator."""
 
-    def __init__(self, client, devices):
+    def __init__(self, client, devices, show_all=False):
         self.client = client
+        self.show_all = show_all
         self.devices = {d.device_id: d for d in devices}
         self.last_update_success = True
 
@@ -52,12 +56,11 @@ class Stub:
         return await self.client.async_control(device_id, payload)
 
     def model_supports(self, device, key):
-        setting = device.model_setting
-        if not isinstance(setting, dict) or not setting:
-            return True
-        if key in setting:
-            return bool(setting[key])
-        return False
+        # reuse the real implementation so the probe matches the integration
+        return RunLuckyCoordinator.model_supports(self, device, key)
+
+    def entity_supported(self, device, key, description=None):
+        return RunLuckyCoordinator.entity_supported(self, device, key, description)
 
 
 async def main() -> None:
@@ -99,16 +102,27 @@ async def main() -> None:
             print(f"  protocol keys: {len(device.protocol)}, missing models keys: {missing}")
 
             print("  sensors:")
+            hidden = []
             for key, desc in const.SENSOR_FIELDS.items():
+                if not stub.entity_supported(device, key, desc):
+                    hidden.append(key)
+                    continue
                 e = RunLuckyFieldSensor(stub, device.device_id, key, desc)
                 unit = e.native_unit_of_measurement or ""
                 print(f"    {key:60} {str(e.native_value):>10} {unit}")
             for key, desc in const.ENUM_SENSORS.items():
+                if not stub.entity_supported(device, key, desc):
+                    hidden.append(key)
+                    continue
                 e = RunLuckyEnumSensor(stub, device.device_id, key, desc)
                 print(f"    {key:60} {str(e.native_value):>10}")
+            if hidden:
+                print(f"  filtered out (not supported by {device.model_name}): {hidden}")
 
             print("  binary sensors:")
             for key, desc in const.BINARY_SENSORS.items():
+                if not stub.entity_supported(device, key, desc):
+                    continue
                 e = RunLuckyBinarySensor(stub, device.device_id, key, desc)
                 print(f"    {key:60} {str(e.is_on):>10}")
 

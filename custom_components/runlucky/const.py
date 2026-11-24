@@ -10,6 +10,10 @@ from __future__ import annotations
 DOMAIN = "runlucky"
 MANUFACTURER = "润莱 RunLucky"
 
+# Option that re-enables entities the device reports but its model cannot use
+# (RO / PAC / TDS / pressure / leak sensors that are not installed).
+CONF_SHOW_ALL = "show_all_entities"
+
 # NOTE: the vendor only serves plain HTTP - there is no TLS listener on
 # api.admin-runxin.com (443 is closed).  Credentials therefore travel in
 # cleartext; this is documented in the README.
@@ -174,6 +178,27 @@ PRESSURE_MODELS = {"F149", "F163", "F151"}
 # name: English friendly name (Chinese lives in translations)
 # device_class / state_class / unit are filled in sensor.py
 
+# ---------------------------------------------------------------------------
+# Model capabilities (taken from the app itself)
+#
+# The device reports protocol keys for *every* sub-system the firmware knows
+# about, so the presence of a key says nothing about whether the hardware is
+# actually there.  The official web app decides what to render from three
+# computed properties in chunk-12af5621 (device home page):
+#
+#   isRo           = deviceModel in {C600A, C800D}
+#   isWaterPurifier= deviceModel in {F67N, F67NA, F67D, F71D, F138, F139, F152}
+#   isSwimmingPool = deviceModel in {F138, F139, F152}
+#
+# and additionally treats deviceModel == F104HW as a valve-only device.  We use
+# the exact same sets so a plain softener (e.g. F150 / deviceModel 1) does not
+# end up with RO, TDS, PAC or pressure entities it can never use.
+# ---------------------------------------------------------------------------
+RO_MODELS = frozenset({"C600A", "C800D"})
+WATER_PURIFIER_MODELS = frozenset({"F67N", "F67NA", "F67D", "F71D", "F138", "F139", "F152"})
+SWIMMING_POOL_MODELS = frozenset({"F138", "F139", "F152"})
+F104_MODELS = frozenset({"F104HW"})
+
 SENSOR_FIELDS: dict[str, dict] = {
     "flowRate": {
         "name": "Flow rate",
@@ -197,12 +222,14 @@ SENSOR_FIELDS: dict[str, dict] = {
         "icon": "mdi:gauge",
         "unit": "MPa",
         "suggested_digits": 2,
+        "models": SWIMMING_POOL_MODELS,
     },
     "pressureSettingValue": {
         "name": "Pressure setpoint",
         "icon": "mdi:gauge",
         "unit": "MPa",
         "suggested_digits": 2,
+        "models": SWIMMING_POOL_MODELS,
     },
     "washCountdownTime": {
         "name": "Cycle countdown",
@@ -259,41 +286,49 @@ SENSOR_FIELDS: dict[str, dict] = {
         "icon": "mdi:counter",
         "state_class": "total_increasing",
     },
+    # The firmware reports TDS values on every model but the app never renders
+    # them outside of purifier hardware, so they are opt-in (see CONF_SHOW_ALL).
     "inletTds": {
         "name": "Inlet TDS",
         "icon": "mdi:water-opacity",
         "unit": "ppm",
         "state_class": "measurement",
+        "experimental": True,
     },
     "outletTds": {
         "name": "Outlet TDS",
         "icon": "mdi:water-check-outline",
         "unit": "ppm",
         "state_class": "measurement",
+        "experimental": True,
     },
     "roFilterMaterialLifespanPercentage": {
         "name": "RO filter lifespan",
         "icon": "mdi:filter",
         "unit": "%",
         "state_class": "measurement",
+        "models": RO_MODELS,
     },
     "percentageOfLifespanOfPacCarbonFiberCompositeFilterMaterial": {
         "name": "PAC filter lifespan",
         "icon": "mdi:filter",
         "unit": "%",
         "state_class": "measurement",
+        "models": RO_MODELS,
     },
     "pacTotalWaterProductionTime": {
         "name": "PAC total production time",
         "icon": "mdi:timer-outline",
         "unit": "min",
         "state_class": "total_increasing",
+        "models": RO_MODELS,
     },
     "roTotalWaterProductionTime": {
         "name": "RO total production time",
         "icon": "mdi:timer-outline",
         "unit": "min",
         "state_class": "total_increasing",
+        "models": RO_MODELS,
     },
     "rawWaterHardness": {
         "name": "Raw water hardness",
@@ -310,8 +345,18 @@ SENSOR_FIELDS: dict[str, dict] = {
 
 ENUM_SENSORS: dict[str, dict] = {
     "station": {"name": "System status", "enum": STATION, "icon": "mdi:water-sync"},
-    "f104Station": {"name": "Valve state", "enum": F104_STATION, "icon": "mdi:valve"},
-    "roStation": {"name": "RO status", "enum": RO_STATION, "icon": "mdi:water-check"},
+    "f104Station": {
+        "name": "Valve state",
+        "enum": F104_STATION,
+        "icon": "mdi:valve",
+        "models": F104_MODELS,
+    },
+    "roStation": {
+        "name": "RO status",
+        "enum": RO_STATION,
+        "icon": "mdi:water-check",
+        "models": RO_MODELS,
+    },
     "systemCloseReason": {
         "name": "Valve close reason",
         "enum": SYSTEM_CLOSE_REASON,
@@ -328,21 +373,25 @@ ENUM_SENSORS: dict[str, dict] = {
         "name": "Leak sensor 1",
         "enum": WATER_IMMERSION_DETECTOR,
         "icon": "mdi:water-alert",
+        "installed_only": True,
     },
     "waterImmersionDetector2": {
         "name": "Leak sensor 2",
         "enum": WATER_IMMERSION_DETECTOR,
         "icon": "mdi:water-alert",
+        "installed_only": True,
     },
     "waterImmersionDetector3": {
         "name": "Leak sensor 3",
         "enum": WATER_IMMERSION_DETECTOR,
         "icon": "mdi:water-alert",
+        "installed_only": True,
     },
     "waterImmersionDetector4": {
         "name": "Leak sensor 4",
         "enum": WATER_IMMERSION_DETECTOR,
         "icon": "mdi:water-alert",
+        "installed_only": True,
     },
 }
 

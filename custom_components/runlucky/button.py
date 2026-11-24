@@ -11,7 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from ._base import RunLuckyEntity
-from .const import DOMAIN
+from .const import DOMAIN, RO_MODELS
 from .coordinator import RunLuckyCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -75,8 +75,10 @@ async def async_setup_entry(
             entities.append(
                 RunLuckyButton(coordinator, device.device_id, key, icon, action)
             )
-        # only models that report the RO sub-system get the flush button
-        if "roStation" in (device.protocol or {}):
+        # the RO sub-system only exists on C600A / C800D (see const.RO_MODELS)
+        if coordinator.entity_supported(
+            device, "roStation", {"models": RO_MODELS}
+        ):
             entities.append(
                 RunLuckyButton(
                     coordinator,

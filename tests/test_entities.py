@@ -23,7 +23,10 @@ sys.path.insert(0, str(REPO))
 from custom_components.runlucky import const  # noqa: E402
 from custom_components.runlucky.binary_sensor import RunLuckyBinarySensor  # noqa: E402
 from custom_components.runlucky.button import BUTTONS, RunLuckyButton  # noqa: E402
-from custom_components.runlucky.coordinator import RunLuckyDevice  # noqa: E402
+from custom_components.runlucky.coordinator import (  # noqa: E402
+    RunLuckyCoordinator,
+    RunLuckyDevice,
+)
 from custom_components.runlucky.number import RunLuckyNumber  # noqa: E402
 from custom_components.runlucky.select import RunLuckySelect  # noqa: E402
 from custom_components.runlucky.sensor import (  # noqa: E402
@@ -317,6 +320,72 @@ async def main() -> int:
         if zh["entity"]["sensor"][k]["name"] == doc["entity"]["sensor"][k]["name"]
     ]
     check("zh-Hans sensor names localised", not zh_missing, zh_missing)
+
+
+    # ------------------------------------------------------------------
+    # entity filtering: the firmware reports keys the model cannot use
+    # ------------------------------------------------------------------
+    class _FilterSelf:
+        """Stand-in for the coordinator when calling entity_supported."""
+
+        def __init__(self, show_all: bool) -> None:
+            self.show_all = show_all
+
+    supported = RunLuckyCoordinator.entity_supported
+    strict = _FilterSelf(show_all=False)
+    loose = _FilterSelf(show_all=True)
+
+    # plain softener (F150): no RO sub-system, no PAC filter, no pressure sensor
+    for key, description in (
+        ("roStation", const.ENUM_SENSORS["roStation"]),
+        ("roTotalWaterProductionTime", const.SENSOR_FIELDS["roTotalWaterProductionTime"]),
+        ("roFilterMaterialLifespanPercentage", const.SENSOR_FIELDS["roFilterMaterialLifespanPercentage"]),
+        (
+            "percentageOfLifespanOfPacCarbonFiberCompositeFilterMaterial",
+            const.SENSOR_FIELDS["percentageOfLifespanOfPacCarbonFiberCompositeFilterMaterial"],
+        ),
+        ("pacTotalWaterProductionTime", const.SENSOR_FIELDS["pacTotalWaterProductionTime"]),
+        ("pressureValue", const.SENSOR_FIELDS["pressureValue"]),
+        ("pressureSettingValue", const.SENSOR_FIELDS["pressureSettingValue"]),
+        ("f104Station", const.ENUM_SENSORS["f104Station"]),
+    ):
+        check(
+            f"softener hides {key}",
+            supported(strict, device, key, description) is False,
+        )
+        # show_all only re-enables keys the device actually reports: an entity
+        # the firmware does not even mention has no data to show.
+        check(
+            f"show_all {'re-enables' if key in PROTOCOL else 'still hides'} {key}",
+            supported(loose, device, key, description) is (key in PROTOCOL),
+        )
+
+    # TDS is reported but the app never renders it -> opt-in only
+    for key in ("inletTds", "outletTds"):
+        check(f"TDS {key} hidden by default", supported(strict, device, key, const.SENSOR_FIELDS[key]) is False)
+        check(f"TDS {key} via show_all", supported(loose, device, key, const.SENSOR_FIELDS[key]) is True)
+
+    # leak detectors: only when a detector is really paired (status != 0)
+    check("installed leak sensor kept", supported(strict, device, "waterImmersionDetector1", const.ENUM_SENSORS["waterImmersionDetector1"]) is True)
+    absent = RunLuckyDevice({"deviceId": "dev-2", "deviceName": "软水机 2"})
+    absent.update({"protocolData": {**PROTOCOL, "waterImmersionDetector3": 0}})
+    check("uninstalled leak sensor hidden", supported(strict, absent, "waterImmersionDetector3", const.ENUM_SENSORS["waterImmersionDetector3"]) is False)
+    check("uninstalled leak sensor via show_all", supported(loose, absent, "waterImmersionDetector3", const.ENUM_SENSORS["waterImmersionDetector3"]) is True)
+
+    # keys the device does not report at all stay hidden even in show_all mode
+    check("missing key stays hidden", supported(loose, device, "notAProtocolKey", {}) is False)
+
+    # softener keeps the entities it really has
+    for key in ("flowRate", "residualWaterProduction", "station", "regenerationTimes", "dailyWaterConsumption"):
+        description = const.SENSOR_FIELDS.get(key) or const.ENUM_SENSORS.get(key) or {}
+        check(f"softener keeps {key}", supported(strict, device, key, description) is True)
+
+    # an RO model gets the RO entities back
+    ro_device = RunLuckyDevice({"deviceId": "dev-3", "deviceName": "RO 机"})
+    ro_device.update({"protocolData": {**PROTOCOL, "deviceModel": 18}})
+    check("RO model keeps roStation", supported(strict, ro_device, "roStation", const.ENUM_SENSORS["roStation"]) is True)
+    check("RO model keeps RO filter lifespan", supported(strict, ro_device, "roFilterMaterialLifespanPercentage", const.SENSOR_FIELDS["roFilterMaterialLifespanPercentage"]) is True)
+    print()
 
     print()
     print("ALL TESTS PASSED" if FAILURES == 0 else f"{FAILURES} FAILURE(S)")

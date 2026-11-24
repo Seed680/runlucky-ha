@@ -51,9 +51,8 @@ async def async_setup_entry(
     coordinator: RunLuckyCoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
     entities: list[BinarySensorEntity] = []
     for device in coordinator.devices.values():
-        protocol = device.protocol or {}
         for key, description in BINARY_SENSORS.items():
-            if key not in protocol:
+            if not coordinator.entity_supported(device, key, description):
                 continue
             entities.append(
                 RunLuckyBinarySensor(coordinator, device.device_id, key, description)

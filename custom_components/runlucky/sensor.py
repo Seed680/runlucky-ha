@@ -137,15 +137,6 @@ class RunLuckyEnumSensor(RunLuckyReadableEntity, SensorEntity):
 
 
 
-def _present(device: Any, key: str) -> bool:
-    """Return True when the device actually reports this protocol key.
-
-    Models differ a lot (RO sub-system, leak detectors, pressure sensor ...),
-    and the cloud simply omits the keys a model does not have, so entity
-    creation follows the reported protocol instead of hardcoded model lists.
-    """
-    protocol = getattr(device, "protocol", None) or {}
-    return key in protocol
 
 
 async def async_setup_entry(
@@ -159,13 +150,13 @@ async def async_setup_entry(
 
     for device in coordinator.devices.values():
         for key, description in SENSOR_FIELDS.items():
-            if not _present(device, key):
+            if not coordinator.entity_supported(device, key, description):
                 continue
             entities.append(
                 RunLuckyFieldSensor(coordinator, device.device_id, key, description)
             )
         for key, description in ENUM_SENSORS.items():
-            if not _present(device, key):
+            if not coordinator.entity_supported(device, key, description):
                 continue
             entities.append(
                 RunLuckyEnumSensor(coordinator, device.device_id, key, description)

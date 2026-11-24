@@ -4,6 +4,27 @@ All notable changes to this integration are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-11-22
+
+### 修复
+
+- 过滤掉本机型号用不到的实体。固件会在 `protocolData` 中上报所有子系统的字段，
+  之前仅凭「字段存在」就建实体，导致中央软水机（F150）也出现 RO 状态、RO 强制冲洗、
+  RO/PAC 滤芯寿命、PAC/RO 累计制水时间、进/出水 TDS、水压、阀门状态等净水机 / 泳池机实体。
+  现在按官方 App 自身的判定（`isRo` / `isWaterPurifier` / `isSwimmingPool` / `F104HW`）过滤：
+  - RO / PAC 相关 → 仅 `C600A`、`C800D`
+  - 水压 → 仅 `F138`、`F139`、`F152`
+  - `f104Station` → 仅 `F104HW`
+  - TDS → App 从不渲染，默认不建（实验性）
+  - 漏水检测 1–4 → 未安装（值 `0`）时不建
+- 实测 F150 的实体数量从 75 降到 31（传感器 20 / 二进制 5 / 按钮 5 / 开关 1），
+  剩下全部是该机型真实可用项。
+
+### 新增
+
+- 集成选项「显示本机用不到 / 未安装的实体」（默认关闭）。打开后恢复设备**确实上报**的
+  全部字段，只用于排查固件差异，不会凭空造数据。
+
 ## [0.2.0] - 2026-11-22
 
 首个可用版本，已在真实设备（`deviceModel=1` → F150，水量单位 m³）上完成端到端验证。

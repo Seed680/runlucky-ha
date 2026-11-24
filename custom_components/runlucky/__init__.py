@@ -12,7 +12,7 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import aiohttp_client
 
 from .api import RunLuckyApiError, RunLuckyAuthError, RunLuckyClient
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, MIN_SCAN_INTERVAL
+from .const import CONF_SHOW_ALL, DEFAULT_SCAN_INTERVAL, DOMAIN, MIN_SCAN_INTERVAL
 from .coordinator import RunLuckyCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -26,6 +26,7 @@ PLATFORMS = [
     "select",
     "text",
 ]
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up RunLucky from a config entry."""
@@ -59,7 +60,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         int(entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)),
         MIN_SCAN_INTERVAL,
     )
-    coordinator = RunLuckyCoordinator(hass, client, devices, scan_interval)
+    show_all = bool(entry.options.get(CONF_SHOW_ALL, False))
+    coordinator = RunLuckyCoordinator(hass, client, devices, scan_interval, show_all)
 
     await coordinator.async_config_entry_first_refresh()
     await coordinator.async_load_model_settings()

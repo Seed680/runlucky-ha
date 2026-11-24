@@ -11,6 +11,7 @@ from homeassistant.const import CONF_PASSWORD, CONF_SCAN_INTERVAL, CONF_USERNAME
 from homeassistant.core import callback
 from homeassistant.helpers import aiohttp_client
 from homeassistant.helpers.selector import (
+    BooleanSelector,
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
@@ -20,7 +21,7 @@ from homeassistant.helpers.selector import (
 )
 
 from .api import RunLuckyApiError, RunLuckyAuthError, RunLuckyClient
-from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, MIN_SCAN_INTERVAL
+from .const import CONF_SHOW_ALL, DEFAULT_SCAN_INTERVAL, DOMAIN, MIN_SCAN_INTERVAL
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ class RunLuckyConfigFlow(ConfigFlow, domain=DOMAIN):
 
 
 class RunLuckyOptionsFlow(OptionsFlow):
-    """Options: polling interval."""
+    """Options: polling interval and entity filtering."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None):
         """Manage the options."""
@@ -101,6 +102,7 @@ class RunLuckyOptionsFlow(OptionsFlow):
         current = self.config_entry.options.get(
             CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
         )
+        show_all = self.config_entry.options.get(CONF_SHOW_ALL, False)
         schema = vol.Schema(
             {
                 vol.Optional(CONF_SCAN_INTERVAL, default=current): NumberSelector(
@@ -112,6 +114,7 @@ class RunLuckyOptionsFlow(OptionsFlow):
                         unit_of_measurement="s",
                     )
                 ),
+                vol.Optional(CONF_SHOW_ALL, default=show_all): BooleanSelector(),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)

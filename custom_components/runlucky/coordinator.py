@@ -98,6 +98,7 @@ class RunLuckyCoordinator(DataUpdateCoordinator[dict[str, RunLuckyDevice]]):
         client: RunLuckyClient,
         devices: list[dict[str, Any]],
         scan_interval: int = DEFAULT_SCAN_INTERVAL,
+        show_all: bool = False,
     ) -> None:
         """Initialise the coordinator."""
         super().__init__(
@@ -107,6 +108,7 @@ class RunLuckyCoordinator(DataUpdateCoordinator[dict[str, RunLuckyDevice]]):
             update_interval=timedelta(seconds=scan_interval),
         )
         self.client = client
+        self.show_all = show_all
         self.devices: dict[str, RunLuckyDevice] = {
             device.device_id: device for device in (RunLuckyDevice(d) for d in devices)
         }
@@ -168,3 +170,43 @@ class RunLuckyCoordinator(DataUpdateCoordinator[dict[str, RunLuckyDevice]]):
                     return bool(value["isSupport"])
                 return True
         return False
+
+    def entity_supported(
+        self,
+        device: RunLuckyDevice,
+        key: str,
+        description: dict[str, Any] | None = None,
+    ) -> bool:
+        """Return True when an entity should be created for this device.
+
+        A key being present in ``protocolData`` only means the firmware knows
+        about the field, not that the hardware exists: a central water
+        softener happily reports ``roStation`` and ``outletTds``.  Descriptors
+        therefore carry an optional ``models`` set (mirroring the app's own
+        ``isRo`` / ``isWaterPurifier`` / ``isSwimmingPool`` checks), an
+        ``installed_only`` flag for paired accessories and an ``experimental``
+        flag for fields the app never renders.  ``show_all_entities`` in the
+        integration options overrides all three.
+        """
+        description = description or {}
+        if key not in (device.protocol or {}):
+            return False
+        if self.show_all:
+            return True
+
+        models = description.get("models")
+        if models and device.model_name not in models:
+            return False
+
+        if description.get("experimental"):
+            return False
+
+        if description.get("installed_only"):
+            # enum value 0 means "not installed" for the leak detectors
+            value = device.protocol.get(key)
+            try:
+                return int(value) != 0
+            except (TypeError, ValueError):
+                return False
+
+        return True

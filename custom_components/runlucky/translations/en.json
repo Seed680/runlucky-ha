@@ -266,7 +266,12 @@
       "init": {
         "title": "RunLucky options",
         "data": {
-          "scan_interval": "Polling interval"
+          "scan_interval": "Polling interval",
+          "show_all_entities": "Show unused / unsupported entities"
+        },
+        "data_description": {
+          "scan_interval": "How often the cloud cache is polled.",
+          "show_all_entities": "Also create RO, PAC, TDS, pressure and uninstalled leak-sensor entities that this device model reports but cannot use."
         }
       }
     }
